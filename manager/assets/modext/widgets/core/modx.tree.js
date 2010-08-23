@@ -239,7 +239,11 @@ Ext.extend(MODx.tree.Tree,Ext.tree.TreePanel,{
     ,refresh: function(func,scope,args) {
         var treeState = Ext.state.Manager.get(this.treestate_id);
         this.root.reload();
-        if (treeState === undefined) {this.root.expand(null,null);} else {this.expandPath(treeState,null);}
+        if (treeState === undefined) {this.root.expand(null,null);} else {
+            for (var i=0;i<treeState.length;i++) {
+                this.expandPath(treeState[i]);
+            }
+        }
         if (func) {
             scope = scope || this;
             args = args || [];
@@ -308,7 +312,7 @@ Ext.extend(MODx.tree.Tree,Ext.tree.TreePanel,{
     ,expandNodes: function() {
         if (this.root) {
             this.root.expand();
-            this.root.expandChildNodes();
+            this.root.expandChildNodes(true);
         }
     }
 	
@@ -317,7 +321,7 @@ Ext.extend(MODx.tree.Tree,Ext.tree.TreePanel,{
      */
     ,collapseNodes: function() {
         if (this.root) {
-            this.root.collapseChildNodes();
+            this.root.collapseChildNodes(true);
             this.root.collapse();
         }
     }
@@ -532,13 +536,13 @@ Ext.extend(MODx.tree.Tree,Ext.tree.TreePanel,{
             icon: iu+'arrow_down.png'
             ,cls: 'x-btn-icon'
             ,tooltip: {text: _('tree_expand')}
-            ,handler: function() {this.getRootNode().expandChildNodes(true);}
+            ,handler: this.expandNodes
             ,scope: this
         },{
             icon: iu+'arrow_up.png'
             ,cls: 'x-btn-icon'
             ,tooltip: {text: _('tree_collapse')}
-            ,handler: function() {this.getRootNode().collapseChildNodes(true);}
+            ,handler: this.collapseNodes
             ,scope: this
         },'-',{
             icon: iu+'refresh.png'

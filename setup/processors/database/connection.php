@@ -12,7 +12,11 @@ $xpdo = $install->getConnection($mode);
 $errors = array();
 $dbExists = false;
 if (!is_object($xpdo) || !($xpdo instanceof xPDO)) {
-    $this->error->failure($install->lexicon['xpdo_err_ins']);
+    if (is_bool($xpdo)) {
+        $this->error->failure($install->lexicon('xpdo_err_ins'));
+    } else {
+        $this->error->failure($xpdo);
+    }
 }
 $xpdo->setLogTarget(array(
     'target' => 'ARRAY'
@@ -23,7 +27,7 @@ $xpdo->setLogTarget(array(
 $dbExists = $xpdo->connect();
 if (!$dbExists) {
     if ($mode != modInstall::MODE_NEW) {
-        $this->error->failure($install->lexicon['db_err_connect_upgrade'], $errors);
+        $this->error->failure($install->lexicon('db_err_connect_upgrade'), $errors);
     } else {
         /* otherwise try to connect to the server without the database */
         $xpdo = $install->_connect(
@@ -34,14 +38,14 @@ if (!$dbExists) {
         );
 
         if (!is_object($xpdo) || !($xpdo instanceof xPDO)) {
-            $this->error->failure($install->lexicon['xpdo_err_ins'], $errors);
+            $this->error->failure($install->lexicon('xpdo_err_ins'), $errors);
         }
         $xpdo->setLogTarget(array(
             'target' => 'ARRAY'
             ,'options' => array('var' => & $errors)
         ));
         if (!$xpdo->connect()) {
-            $this->error->failure($install->lexicon['db_err_connect_server'], $errors);
+            $this->error->failure($install->lexicon('db_err_connect_server'), $errors);
         }
     }
 }
@@ -76,7 +80,7 @@ if ($stmt && $stmt instanceof PDOStatement) {
     ksort($collations);
     $data['collations'] = array_values($collations);
 } else {
-    $this->error->failure($install->lexicon['db_err_show_collations'], $errors);
+    $this->error->failure($install->lexicon('db_err_show_collations'), $errors);
 }
 unset($stmt);
 
@@ -100,7 +104,7 @@ if ($stmt && $stmt instanceof PDOStatement) {
     ksort($charsets);
     $data['charsets'] = array_values($charsets);
 } else {
-    $this->error->failure($install->lexicon['db_err_show_charsets'], $errors);
+    $this->error->failure($install->lexicon('db_err_show_charsets'), $errors);
 }
 unset($stmt);
 
@@ -110,4 +114,4 @@ $install->settings->store(array(
     'database_collation' => $data['collation'],
 ));
 
-$this->error->success($install->lexicon['db_success'], $data);
+$this->error->success($install->lexicon('db_success'), $data);

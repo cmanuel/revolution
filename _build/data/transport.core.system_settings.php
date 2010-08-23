@@ -276,6 +276,15 @@ $settings['custom_resource_classes']->fromArray(array (
   'area' => 'system',
   'editedon' => null,
 ), '', true, true);
+$settings['default_per_page']= $xpdo->newObject('modSystemSetting');
+$settings['default_per_page']->fromArray(array (
+  'key' => 'default_per_page',
+  'value' => '20',
+  'xtype' => 'textfield',
+  'namespace' => 'core',
+  'area' => 'manager',
+  'editedon' => null,
+), '', true, true);
 $settings['default_template']= $xpdo->newObject('modSystemSetting');
 $settings['default_template']->fromArray(array (
   'key' => 'default_template',
@@ -837,6 +846,15 @@ $settings['phpthumb_far']->fromArray(array (
   'area' => 'phpthumb',
   'editedon' => null,
 ), '', true, true);
+$settings['phpthumb_imagemagick_path']= $xpdo->newObject('modSystemSetting');
+$settings['phpthumb_imagemagick_path']->fromArray(array (
+  'key' => 'phpthumb_imagemagick_path',
+  'value' => '',
+  'xtype' => 'textfield',
+  'namespace' => 'core',
+  'area' => 'phpthumb',
+  'editedon' => null,
+), '', true, true);
 
 $settings['publish_default']= $xpdo->newObject('modSystemSetting');
 $settings['publish_default']->fromArray(array (
@@ -1232,3 +1250,12 @@ $settings['which_element_editor']->fromArray(array (
   'editedon' => null,
 ), '', true, true);
 return $settings;
+$settings['xhtml_urls']= $xpdo->newObject('modSystemSetting');
+$settings['xhtml_urls']->fromArray(array (
+  'key' => 'xhtml_urls',
+  'value' => true,
+  'xtype' => 'combo-boolean',
+  'namespace' => 'core',
+  'area' => 'site',
+  'editedon' => null,
+), '', true, true);

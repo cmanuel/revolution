@@ -89,7 +89,7 @@ class modFileHandler {
             $basePath = $this->modx->getOption('base_path',null,MODX_BASE_PATH);
             if ($basePath != '/') $fileManagerUrl = str_replace($basePath,'',$path);
         }
-        return $fileManagerUrl;
+        return $this->postfixSlash($fileManagerUrl);
     }
 
     /**
@@ -117,6 +117,24 @@ class modFileHandler {
     public function getDirectoryFromFile($fileName) {
         $dir = dirname($fileName);
         return $this->postfixSlash($dir);
+    }
+
+    /**
+     * Tells if a file is a binary file or not.
+     *
+     * @param string $file
+     * @return boolean True if a binary file.
+     */
+    public function isBinary($file) {
+        if (file_exists($file)) {
+            if (!is_file($file)) return false;
+            $fh  = @fopen($file,'r');
+            $blk = @fread($fh,512);
+            @fclose($fh);
+            @clearstatcache();
+            return (substr_count($blk, "^ -~"/*. "^\r\n"*/)/512 > 0.3) || (substr_count($blk, "\x00") > 0) ? false : true;
+        }
+        return false;
     }
 }
 
